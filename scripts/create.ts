@@ -213,7 +213,7 @@ describe("${packageName}", () => {
     const tests = join(dir, "tests");
     const src = join(dir, "src");
 
-    function initSrc() {
+    const initSrc = function() {
       return writeFile(
         join(src, "index.ts"),
         prettier.format(indexFile, {
@@ -223,7 +223,7 @@ describe("${packageName}", () => {
       );
     }
 
-    function initIndex() {
+    const initIndex = function() {
       // When a bundler compiles our libs this headerdoc comment will cause that
       // tool to retain our LICENSE information in their bundled output.
       const headerdoc = `/*!
@@ -243,7 +243,7 @@ describe("${packageName}", () => {
       );
     }
 
-    function initRootFiles() {
+    const initRootFiles = function() {
       return Promise.all([
         writeFile(
           join(dir, ".npmignore"),
@@ -261,7 +261,7 @@ describe("${packageName}", () => {
       ]);
     }
 
-    function initTests() {
+    const initTests = function() {
       return writeFile(
         join(tests, "index.test.ts"),
         prettier.format(testFile, { ...prettierConfig, parser: "typescript" })
