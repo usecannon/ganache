@@ -104,9 +104,9 @@ export default class BlockManager extends Manager<Block> {
       }
     }
     const totalDifficulty = Quantity.toBuffer(json.totalDifficulty);
-    const txs: BlockRawTransaction[] = Array(json.transactions.length);
+    const txs: BlockRawTransaction[] = Array(json.transactions?.length || 0);
     const extraTxs: GanacheRawBlockTransactionMetaData[] = Array(
-      json.transactions.length
+      json.transactions?.length || 0
     );
     const blockHash = Data.toBuffer(json.hash);
     for (let index = 0; index < json.transactions.length; index++) {
@@ -123,7 +123,7 @@ export default class BlockManager extends Manager<Block> {
       ];
       const tx = TransactionFactory.fromRpc(txJson, common, txExtra);
       txs[index] =
-        tx.raw.length === 9
+        tx.raw && tx.raw.length === 9
           ? tx.raw
           : tx.serialized ?? encodeWithPrefix(tx.type.toNumber(), tx.raw);
       extraTxs[index] = blockExtra;
@@ -132,8 +132,8 @@ export default class BlockManager extends Manager<Block> {
     let start: EthereumRawBlock;
 
     if (hasWithdrawals) {
-      const extraWithdrawals: WithdrawalRaw[] = Array(json.withdrawals.length);
-      for (let i = 0; i < json.withdrawals.length; i++) {
+      const extraWithdrawals: WithdrawalRaw[] = Array(json.withdrawals?.length ?? 0);
+      for (let i = 0; i < json.withdrawals && json.withdrawals.length || 0; i++) {
         const withdrawal = json.withdrawals[i];
         extraWithdrawals[i] = [
           Quantity.toBuffer(withdrawal.index),
